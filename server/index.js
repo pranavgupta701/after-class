@@ -141,9 +141,7 @@ async function deliverOtp(email, code) {
   const { data, error } = await resend.emails.send({
     from,
     to: [email],
-    subject: 'Your Afterclass verification code',
-    text: `Your Afterclass verification code is ${code}. It expires in 10 minutes.`,
-    html: `<p>Your Afterclass verification code is <strong>${code}</strong>.</p><p>It expires in 10 minutes.</p>`
+    ...require('./verification-email').verificationEmail(code)
   });
   if (error) {
     console.error('Resend delivery error:', error);
