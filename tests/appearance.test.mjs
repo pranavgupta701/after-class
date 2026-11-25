@@ -42,3 +42,13 @@ test('classic persists independently of OS appearance and uses dark native contr
   s.api.set('light'); assert.equal(s.root.dataset.palette, 'campus');
   s.api.set('classic'); assert.equal(s.storage.get('afterclass.appearance'), 'classic');
 });
+
+test('classic light persists and the toolbar toggles brightness without losing Classic', () => {
+ const s=setup({saved:'classic-light',dark:true});
+ assert.equal(s.root.dataset.theme,'light');assert.equal(s.root.dataset.palette,'classic');
+ assert.equal(s.root.style.colorScheme,'light');assert.equal(s.meta.content,'#fff7ef');
+ s.api.toggle();assert.equal(s.api.get(),'classic');assert.equal(s.root.dataset.theme,'dark');
+ s.api.toggle();assert.equal(s.api.get(),'classic-light');assert.equal(s.storage.get('afterclass.appearance'),'classic-light');
+ s.listeners.storage({key:'afterclass.appearance',newValue:'classic-light'});assert.equal(s.root.dataset.theme,'light');
+ s.api.set('light');s.api.toggle();assert.equal(s.api.get(),'dark');assert.equal(s.root.dataset.palette,'campus');
+});
