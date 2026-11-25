@@ -24,6 +24,9 @@ import { createAdminLoader } from './admin-loader.mjs';
 import { ACTIVITIES, activityFor, selectPlans, planTime } from './discovery.mjs';
 import 'leaflet/dist/leaflet.css';
 import './appearance.css';
+import './daylight.css';
+import { installDaylight, daylightLabel } from './daylight.mjs';
+installDaylight();
 import { appearanceControl, appearanceSettings } from './appearance.js';
 import L from 'leaflet';
 import { io } from 'socket.io-client';
@@ -681,7 +684,7 @@ function home() {
     {id:'play',title:'One more round.',detail:'Bring a game. Meet your opponent.',duration:'Play & unwind'}
   ];
   return layout(`<div class="social-home">
-    <section class="social-heading"><div><span class="social-dateline">${new Date().toLocaleDateString([], {weekday:'long',day:'numeric',month:'long'})}</span><h1>Make time<br>for <em>someone.</em></h1></div><div class="social-intro"><p>A free hour is a good place to start.</p><button class="primary" onclick="openComposer()">Create a plan</button></div></section>
+    <section class="social-heading"><div><span class="social-dateline">${new Date().toLocaleDateString([], {weekday:'long',day:'numeric',month:'long'})}${daylightLabel()}</span><h1>Make time<br>for <em>someone.</em></h1></div><div class="social-intro"><p>A free hour is a good place to start.</p><button class="primary" onclick="openComposer()">Create a plan</button></div></section>
     ${cx.reminders()}${cx.availability()}
     <section class="social-intentions" aria-label="Plan ideas">${ideas.map((idea,i)=>`<button class="social-idea social-idea-${idea.id}" onclick="startHomePlan('${idea.id}')"><div class="social-idea-top"><span>${idea.duration}</span><span class="idea-number">0${i+1}</span></div><div class="social-idea-art" aria-hidden="true">${uiIcon(idea.id)}</div><h2>${idea.title}</h2><p>${idea.detail}</p><span class="idea-action">Make this plan</span></button>`).join('')}</section>
     <div class="social-bottom"><section class="social-feed"><div class="social-feed-heading"><h2>Find your company</h2><div class="availability-tabs" role="group" aria-label="When are you free">${[['today','Today'],['tomorrow','Tomorrow'],['week','This week']].map(([v,l])=>`<button aria-pressed="${homeWhen===v}" onclick="setHomeWhen('${v}')">${l}</button>`).join('')}</div></div>

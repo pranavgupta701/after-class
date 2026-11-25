@@ -1,0 +1,20 @@
+/* Atmospheric colour stays behind the page; content cards retain opaque surfaces. */
+html[data-daylight=morning] { --sky-a:#f6cf9c;--sky-b:#b6d7ec;--sky-orb:#ffe5b3;--orb-x:82%;--orb-y:220px; }
+html[data-daylight=afternoon] { --sky-a:#c0e1ef;--sky-b:#f5dfa8;--sky-orb:#fff1bd;--orb-x:72%;--orb-y:110px; }
+html[data-daylight=evening] { --sky-a:#e9b4a3;--sky-b:#c6b4e1;--sky-orb:#ffc99e;--orb-x:88%;--orb-y:300px; }
+html[data-daylight=night] { --sky-a:#b3bddf;--sky-b:#c8bbe3;--sky-orb:#dde4f6;--orb-x:86%;--orb-y:150px; }
+html[data-daylight]:not([data-daylight=off]) { --sky-strength:32%;--orb-strength:65%; }
+html[data-theme=dark][data-daylight] { --sky-strength:12%;--orb-strength:20%; }
+html[data-theme][data-daylight]:not([data-daylight=off]) .experience-shell main {
+ background-color:var(--paper);
+ background-image:radial-gradient(circle 58px at var(--orb-x) var(--orb-y),color-mix(in srgb,var(--sky-orb) var(--orb-strength),var(--paper)) 96%,transparent 100%),radial-gradient(ellipse 90% 430px at 95% 0%,color-mix(in srgb,var(--sky-a) var(--sky-strength),transparent),transparent),radial-gradient(ellipse 85% 500px at 10% 100px,color-mix(in srgb,var(--sky-b) var(--sky-strength),transparent),transparent);
+ background-repeat:no-repeat;
+}
+html[data-theme][data-daylight=night] .experience-shell main {
+ background-image:radial-gradient(circle 39px at calc(var(--orb-x) - 20px) 133px,var(--paper) 97%,transparent 100%),radial-gradient(circle 46px at var(--orb-x) var(--orb-y),color-mix(in srgb,var(--sky-orb) var(--orb-strength),var(--paper)) 97%,transparent 100%),radial-gradient(circle at 68% 90px,var(--muted) 1px,transparent 2px),radial-gradient(circle at 92% 240px,var(--muted) 1px,transparent 2px),radial-gradient(circle at 74% 280px,var(--muted) 1px,transparent 2px),radial-gradient(ellipse 90% 430px at 95% 0%,color-mix(in srgb,var(--sky-a) var(--sky-strength),transparent),transparent),radial-gradient(ellipse 85% 500px at 10% 100px,color-mix(in srgb,var(--sky-b) var(--sky-strength),transparent),transparent);
+}
+.daylight-label { display:inline-flex;align-items:center;gap:7px;margin-left:14px;padding:5px 10px;border:1px solid var(--line);border-radius:30px;background:var(--surface);color:var(--muted);font:500 11px/1.4 'DM Sans',sans-serif;vertical-align:middle; }
+.daylight-label::before { content:'';width:6px;height:6px;border-radius:50%;background:var(--accent); }
+.daylight-label[hidden] { display:none; }
+@media(max-width:600px) { .daylight-label { margin-left:0;margin-top:8px;display:table; } html[data-daylight] { --orb-x:88%; } }
+@media(forced-colors:active) { html[data-theme][data-daylight] .experience-shell main { background-image:none; } }
