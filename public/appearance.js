@@ -19,7 +19,7 @@
     document.documentElement.dataset.theme = mode;
     document.documentElement.dataset.palette = preference.theme;
     document.documentElement.style.colorScheme = mode;
-    const colors = { classic: { light:'#fff7ef', dark:'#1c1917' }, campus: { light:'#f8f7f1', dark:'#1c1f1e' }, pastel: { light:'#f8f5fc', dark:'#1c1b22' } };
+    const colors = { classic: { light:'#fff8f2', dark:'#1e1b19' }, campus: { light:'#f7f9f4', dark:'#1c1f1d' }, pastel: { light:'#f8f6fc', dark:'#1e1c23' } };
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', colors[preference.theme][mode]);
     document.querySelectorAll('[data-appearance]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.appearance === preference.mode)));
     document.querySelectorAll('[data-palette-choice]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.paletteChoice === preference.theme)));
