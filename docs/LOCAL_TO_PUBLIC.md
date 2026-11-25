@@ -1,6 +1,21 @@
 # Local to public rollout
 
-Status checked 10 November 2026. Afterclass currently runs locally on port 3002. No public host, DNS change, paid service, or external monitor has been provisioned.
+## Deployment status — 25 November 2026
+
+- Source: `https://github.com/pranavgupta701/after-class`, application commit `880627a`.
+- Primary local checkout remains on the SSD at `Projects/Anonymous/anonymous_project`.
+- Oracle API access verified for tenancy `codingtocreation`, home region Mumbai.
+- Created `afterclass-network` and its public subnet, internet gateway, route table and security list.
+- A1 Flex launch failed with `Out of host capacity`; the Always Free-compatible `VM.Standard.E2.1.Micro` instance `afterclass-web` was created instead (1 GB RAM, 50 GB boot disk). A 2 GB swap file supports installation/builds; this is not additional RAM or a capacity guarantee.
+- Public IPv4: `130.210.2.254`. OCI SSH ingress is restricted to the administration IP recorded privately at provisioning; web ports 80/443 are public. If the administration IP changes, update that rule before connecting.
+- Node 22, Nginx and Certbot installed. Application checkout is `/opt/afterclass/app`, owned by the dedicated `afterclass` service account.
+- Systemd service `/etc/systemd/system/afterclass.service` reads `/etc/afterclass/production.env`. The application remains stopped until production credentials are configured. Nginx is prepared for `afterclass.neuralagent.dev`.
+- Namecheap is authoritative DNS. The `afterclass` A record and HTTPS certificate are still pending.
+- Saved Supabase connection fails with `tenant/user not found`. Current SSD Redis is localhost, not a usable production service. Correct both before starting the app.
+- Preserve the existing effective staff encryption key (which may fall back to the local JWT secret) when moving existing staff authenticator records. Do not silently replace it.
+- No paid upgrade or paid VM was selected. No production app, external monitor, email-delivery check or public end-to-end verification is complete.
+
+The sections below describe the remaining rollout procedure and historical recovery evidence.
 
 ## Hosting decision
 
