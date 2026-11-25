@@ -30,3 +30,15 @@ test('preference synchronises between tabs and clearing storage restores system'
 test('blocked browser storage still allows switching for the current visit', () => {
   const s=setup({storageBlocked:true});s.api.set('dark');assert.equal(s.root.dataset.theme,'dark');
 });
+
+test('classic persists independently of OS appearance and uses dark native controls', () => {
+  const s = setup({ saved:'classic' });
+  assert.equal(s.api.get(), 'classic');
+  assert.equal(s.root.dataset.theme, 'dark');
+  assert.equal(s.root.dataset.palette, 'classic');
+  assert.equal(s.root.style.colorScheme, 'dark');
+  assert.equal(s.meta.content, '#1c1917');
+  s.listeners.media(); assert.equal(s.root.dataset.palette, 'classic');
+  s.api.set('light'); assert.equal(s.root.dataset.palette, 'campus');
+  s.api.set('classic'); assert.equal(s.storage.get('afterclass.appearance'), 'classic');
+});

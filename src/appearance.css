@@ -43,8 +43,8 @@ html[data-theme=dark] :is(.social-idea h2,.social-idea p,.social-idea span) { co
 html[data-theme=dark] :is(.account-summary,.quick-plans,.cx-person,.cx-response,.cx-meeting-place,.cx-tags span,.cx-status,.cx-prompt,.cx-dating-intro,.cx-proposal,.insights-switch,.insight-reasons>div,.chart-tabs,.dashboard-track,.case-age,.retention-cell,.rc-tabs,.rc-invitation,.rc-badge,.rc-record,.rc-upload,.rc-event-decision p,.hearing-booking-intro,.hearing-status,.hearing-consent,.hearing-notice,.hearing-case-link,.hearing-cancel-form,.court-request,.dossier-kpi-grid,.report-coverage,.admin-users-table th,.admin-view-tabs,.staff-secret,.staff-unlock pre,.dialog-symbol,.safety-control-icon,.account-status,.workspace-section-icon,.ac-composer-heading>span,.ac-empty-art,.ac-confirm-icon,.inbox-campus-link,.inbox-mark>span) {
   background:var(--surface-soft);color:var(--ink);border-color:var(--line);
 }
-html[data-theme=dark] :is(.availability-tabs button,.inbox-tabs button,.inbox-plan-filters button,.cx-interest-grid span,.cx-duration span,.admin-filter-pill) { color:var(--muted);background:transparent;border-color:var(--line); }
-html[data-theme=dark] :is(.availability-tabs button[aria-pressed=true],.inbox-tabs button.active,.inbox-plan-filters button[aria-pressed=true],.cx-interest-grid :checked+span,.cx-duration :checked+span,.admin-filter-pill.active,.insights-switch button.selected,.chart-tabs button[aria-pressed=true],.rc-tabs button[aria-pressed=true],.hearing-slot-options label:has(:checked)) {
+html[data-theme=dark] :is(.availability-tabs button,.inbox-tabs button,.plan-history-tabs button,.inbox-plan-filters button,.cx-interest-grid span,.cx-duration span,.admin-filter-pill) { color:var(--muted);background:transparent;border-color:var(--line); }
+html[data-theme=dark] :is(.availability-tabs button[aria-pressed=true],.inbox-tabs button.active,.plan-history-tabs button[aria-pressed=true],.inbox-plan-filters button[aria-pressed=true],.cx-interest-grid :checked+span,.cx-duration :checked+span,.admin-filter-pill.active,.insights-switch button.selected,.chart-tabs button[aria-pressed=true],.rc-tabs button[aria-pressed=true],.hearing-slot-options label:has(:checked)) {
   background:#354b36;color:#ecf1db;border-color:#7f956d;
 }
 html[data-theme=dark] :is(input:not([type=checkbox]):not([type=radio]),textarea,select,.modal select,.cx-dialog input,.cx-dialog textarea,.hearing-page input,.hearing-page textarea,.rc-form textarea,.rc-form select,.rc-form input,.budget-form input,.budget-form select,.college-list-heading input,.admin-search-input,.emoji-composer) {
@@ -126,3 +126,40 @@ html[data-theme=dark] .admin-btn-reject { background:#422c28;color:#f1b7a7;borde
 html[data-theme=dark] .admin-empty-state { background:var(--surface)!important;color:var(--ink);border-color:var(--line)!important; }
 html[data-theme=dark] .admin-incident-card .flagged-row { background:#42372a;border-color:#80654a; }
 html[data-theme=dark] .admin-incident-card :is(.flagged-badge,.flagged-content-wrap .flagged-sender,.flagged-content-wrap .flagged-text) { color:#f1c8a7; }
+
+/* Shared control geometry and visible keyboard focus. */
+.plan-history-tabs { flex-wrap:wrap;gap:8px; }
+.plan-history-tabs button { min-height:40px;padding:9px 16px; }
+.staff-unlock input { border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit; }
+.staff-unlock input:focus-visible { outline:2px solid var(--focus);outline-offset:3px; }
+.staff-unlock .staff-close { display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--line);border-radius:50%;cursor:pointer; }
+.appearance-options { display:grid;grid-template-columns:repeat(4,minmax(0,1fr)); }
+.appearance-preview-classic { background:#1c1917;border-color:#665044; }
+.appearance-preview-classic i { background:#30231d; }
+.appearance-preview-classic :is(b,em) { background:#f4845f; }
+@media(max-width:600px) { .appearance-options { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+/* Classic keeps the original orange mark against warm charcoal. */
+html[data-palette=classic] {
+ --paper:#1c1917;--surface:#27221f;--surface-soft:#342b25;
+ --ink:#faf0e7;--muted:#c8b8ab;--line:#59483d;
+ --green:#a63f24;--forest:#a63f24;--accent-text:#ffa987;--focus:#ffad8d;
+}
+html[data-palette=classic] :is(.experience-sidebar,.staff-shell .experience-sidebar,.auth-glass-card,.social-sidecard) { background:#30231d;border-color:var(--line); }
+html[data-palette=classic] .experience-sidebar nav button.active { background:#ffad8d;color:#321b11; }
+html[data-palette=classic] :is(.experience-brand,.auth-brand-logo) i,
+html[data-palette=classic] :is(.experience-brand,.mobile-wordmark) span { color:#ff936b; }
+html[data-palette=classic] :is(.primary,.ac-button-primary,.staff-unlock .primary,.auth-primary-btn,.cx-modebar>button[aria-pressed=true],.workspace-sections .workspace-section.selected) { background:#a63f24;color:#fff5ed;border-color:#d16d49; }
+html[data-palette=classic] :is(.primary,.ac-button-primary,.auth-primary-btn):hover { background:#bd4b2b; }
+html[data-palette=classic] :is(.plan-history-tabs button[aria-pressed=true],.availability-tabs button[aria-pressed=true],.inbox-tabs button.active,.activity-filters button.selected,.admin-filter-pill.active,.chart-tabs button[aria-pressed=true],.rc-tabs button[aria-pressed=true]) { background:#5a3022;color:#ffe2d2;border-color:#dc805b; }
+html[data-palette=classic] :is(input:not([type=checkbox]):not([type=radio]),textarea,select,.emoji-composer) { background-color:#211c19;color:var(--ink);border-color:#79604f; }
+html[data-palette=classic] :is(input,textarea)::placeholder { color:#bba797; }
+html[data-palette=classic] .experience-shell .chat-input-pill { background:#211c19!important;border-color:#79604f!important; }
+html[data-palette=classic] .experience-shell .message-body { background:var(--surface-soft);border-color:var(--line); }
+html[data-palette=classic] .experience-shell .message.is-mine .message-body { background:#763722;border-color:#ad6142; }
+html[data-palette=classic] .inbox-start-pane { background:radial-gradient(ellipse at 50% 25%,#483024,transparent 65%),var(--paper); }
+html[data-palette=classic] :is(.auth-gender-btn.active,.cx-interest-grid :checked+span,.cx-duration :checked+span) { background:#5a3022;color:#ffe2d2;border-color:#dc805b; }
+html[data-palette=classic] :is(.auth-card-title,.auth-card-sub,.auth-form-group label,.auth-alt-action,.auth-alt-action a,.auth-google-hint,.auth-trust-pill) { color:var(--ink); }
+html[data-palette=classic] :is(.social-heading h1 em,.editorial-welcome h1 em) { color:#ffa987; }
+html[data-palette=classic] :is(.experience-sidebar .brand i,.brand-period,.auth-page-wrapper .auth-brand-logo i) { color:#ff936b; }
+html[data-palette=classic] .experience-sidebar nav button:not(.active) { color:#d0bbae; }
+html[data-palette=classic] .experience-sidebar .sidebar-bottom small { color:#d0bbae; }
