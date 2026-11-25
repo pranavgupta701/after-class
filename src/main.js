@@ -2122,7 +2122,7 @@ window.switchAuthShowcase = function(tab) {
 function authPage() {
   if (cx.isReview()) return cx.reviewEntry();
   const step = state.authStep || (state.authOtpSent ? 'otp' : 'welcome');
-  const pendingEmail = state.authPendingEmail || '';
+  const pendingEmail = escapeHtml(state.authPendingEmail || '');
   const selectedGender = state.authSelectedGender || 'prefer_not_to_say';
 
   return `
@@ -2217,7 +2217,7 @@ function authPage() {
               <form id="auth-page-form" onsubmit="handleAuthPageSendOtp(event)">
                 <div class="auth-form-group">
                   <label for="auth-page-email">COLLEGE STUDENT EMAIL</label>
-                  <input id="auth-page-email" class="auth-form-input" type="email" placeholder="you@college.edu" value="${pendingEmail}" required autofocus>
+                  <input id="auth-page-email" class="auth-form-input" type="email" placeholder="you@college.edu" value="${pendingEmail}" oninput="stateAuthEmail(this.value)" autocomplete="email" required autofocus>
                 </div>
 
                 <div class="auth-form-group">
@@ -2246,8 +2246,9 @@ function authPage() {
                   <small>Your university email helps us verify campus access. It isn’t shown on your public student profile.</small>
                 </div>
 
-                <button type="submit" class="auth-primary-btn">
-                  Get Verification Code →
+                ${state.authSendError ? `<p role="alert" style="color:#ffd6c4;line-height:1.5;">${escapeHtml(state.authSendError)}</p>` : ''}
+                <button type="submit" class="auth-primary-btn" ${state.authSending ? 'disabled aria-busy="true"' : ''}>
+                  ${state.authSending ? 'Sending verification code…' : 'Get Verification Code →'}
                 </button>
               </form>
 
@@ -3662,7 +3663,11 @@ window.handleAuthBack = () => {
   render();
 };
 
+window.stateAuthEmail = value => { state.authPendingEmail = value; };
+
 window.selectAuthGender = (gender) => {
+  const input = document.querySelector('#auth-page-email');
+  if (input) state.authPendingEmail = input.value;
   state.authSelectedGender = gender;
   render();
 };
@@ -3674,9 +3679,14 @@ window.handleGoogleSignIn = () => {
 
 window.handleAuthPageSendOtp = async e => {
   e.preventDefault();
+  if (state.authSending) return;
   const input = document.querySelector('#auth-page-email');
   if (!input) return;
   const email = input.value.trim().toLowerCase();
+  state.authPendingEmail = email;
+  state.authSendError = '';
+  state.authSending = true;
+  render();
   try {
     const r = await api('/auth/send-otp', {
       method: 'POST',
@@ -3689,7 +3699,10 @@ window.handleAuthPageSendOtp = async e => {
     toast('Verification code dispatched to your inbox');
     render();
   } catch (err) {
-    toast(err.message);
+    state.authSendError = err.message || 'Unable to send a code. Please try again.';
+  } finally {
+    state.authSending = false;
+    render();
   }
 };
 
