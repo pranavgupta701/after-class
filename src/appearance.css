@@ -74,7 +74,27 @@ html[data-theme] :is(.secondary,.ac-button,.toolbar-create,.toolbar-profile,.mob
 html[data-theme] :is(.secondary,.ac-button,.toolbar-create,.mobile-staff-entry,.hearing-nav,.review-open,.staff-controls button,.cx-place-suggestions button,.emoji-load-more):hover { background:var(--surface-hover);color:var(--ink);border-color:var(--accent); }
 html[data-theme] :is(.primary,.ac-button-primary,.staff-unlock .primary,.auth-primary-btn,.cx-demo-account:first-child,.cx-modebar>button[aria-pressed=true],.insight-metric.accent) { background:var(--accent);color:var(--on-accent);border-color:var(--accent); }
 html[data-theme] :is(.primary,.ac-button-primary,.staff-unlock .primary,.auth-primary-btn):hover { background:var(--accent-hover);color:var(--on-accent);border-color:var(--accent-hover); }
-html[data-theme] :is(button,a,input,textarea,select,summary,[contenteditable]):focus-visible { outline:2px solid var(--focus);outline-offset:3px; }
+/* Pointer clicks do not leave a box around actions; keyboard focus stays visible. */
+html[data-theme] :is(button,a,summary,[tabindex]):focus:not(:focus-visible) { outline:none; }
+html[data-theme] :is(button,a,summary,[tabindex]):focus-visible { outline:2px solid var(--focus);outline-offset:3px; }
+/* Editable controls show focus on their own rounded edge, not an outer rectangle. */
+html[data-theme] :is(input:not([type=checkbox]):not([type=radio]),textarea,select,[contenteditable=true]):focus {
+ outline:none;border-color:var(--focus)!important;box-shadow:inset 0 0 0 1px var(--focus);background-color:var(--surface);
+}
+html[data-theme] :is(input[type=checkbox],input[type=radio]):focus-visible { outline:2px solid var(--focus);outline-offset:3px; }
+/* The composer owns the focus indicator for its borderless editor. */
+html[data-theme] .experience-shell .chat-input-pill:focus-within {
+ border-color:var(--focus)!important;box-shadow:0 0 0 1px var(--focus)!important;
+}
+html[data-theme] .chat-input-pill :is(input,textarea,[contenteditable=true]):focus {
+ outline:none!important;box-shadow:none!important;
+}
+html[data-theme] .discovery-search:focus-within { outline:none;border-color:var(--focus);box-shadow:inset 0 0 0 1px var(--focus); }
+html[data-theme] .discovery-search input:focus { outline:none;box-shadow:none; }
+@media (forced-colors:active) {
+ html[data-theme] :is(input,textarea,select,[contenteditable=true]):focus-visible { outline:2px solid Highlight;outline-offset:2px; }
+ html[data-theme] .chat-input-pill:focus-within { outline:2px solid Highlight;outline-offset:2px; }
+}
 html[data-theme] button:disabled { cursor:not-allowed;opacity:.6; }
 /* All tab families share idle, hover and selected contrast. */
 html[data-theme] :is(.availability-tabs button,.inbox-tabs button,.plan-history-tabs button,.inbox-plan-filters button,.activity-filters button,.discovery-tabs button,.category-chip,.admin-filter-pill,.chart-tabs button,.rc-tabs button) { background:var(--surface);color:var(--muted);border-color:var(--line); }
