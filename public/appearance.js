@@ -10,7 +10,7 @@
     document.documentElement.dataset.theme = mode;
     document.documentElement.dataset.palette = preference.startsWith('classic') ? 'classic' : 'campus';
     document.documentElement.style.colorScheme = mode;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', preference === 'classic-light' ? '#fff7ef' : preference === 'classic' ? '#1c1917' : mode === 'dark' ? '#141d1a' : '#f8f7f1');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', preference === 'classic-light' ? '#fff7ef' : preference === 'classic' ? '#1c1917' : mode === 'dark' ? '#1c1b22' : '#f8f7f1');
     document.querySelectorAll('[data-appearance]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.appearance === preference)));
     document.querySelectorAll('[data-appearance-toggle]').forEach(button => {
       const label = mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';

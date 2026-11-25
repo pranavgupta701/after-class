@@ -25,7 +25,7 @@ test('system follows OS changes but manual choice does not', () => {
 test('preference synchronises between tabs and clearing storage restores system', () => {
   const s=setup({dark:true});s.listeners.storage({key:'afterclass.appearance',newValue:'light'});assert.equal(s.root.dataset.theme,'light');
   s.listeners.storage({key:'unrelated',newValue:'dark'});assert.equal(s.root.dataset.theme,'light');
-  s.listeners.storage({key:null,newValue:null});assert.equal(s.root.dataset.theme,'dark');assert.equal(s.meta.content,'#141d1a');
+  s.listeners.storage({key:null,newValue:null});assert.equal(s.root.dataset.theme,'dark');assert.equal(s.meta.content,'#1c1b22');
 });
 test('blocked browser storage still allows switching for the current visit', () => {
   const s=setup({storageBlocked:true});s.api.set('dark');assert.equal(s.root.dataset.theme,'dark');
