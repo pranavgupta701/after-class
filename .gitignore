@@ -11,3 +11,9 @@ server/uploads
 ._*
 
 dist-review/
+
+# Private environment variants
+.env.*
+!.env.example
+*.pem
+*.key
