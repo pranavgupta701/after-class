@@ -48,5 +48,5 @@ test('cross-tab changes update both choices atomically and removal resets defaul
 test('invalid data and blocked storage do not prevent appearance changes', () => {
  for(const saved of ['invalid','{}','null']) assert.equal(setup({saved}).api.get(),'system');
  const s=setup({storageBlocked:true});s.api.setTheme('classic');s.api.set('dark');s.api.set('invalid');s.api.setTheme('invalid');
- assert.equal(s.api.getTheme(),'classic');assert.equal(s.api.get(),'dark');assert.equal(s.meta.content,'#1e1b19');
+ assert.equal(s.api.getTheme(),'classic');assert.equal(s.api.get(),'dark');assert.equal(s.meta.content,'#191a1f');
 });
