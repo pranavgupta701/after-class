@@ -11,44 +11,42 @@ function setup({ saved = null, dark = false, storageBlocked = false } = {}) {
   vm.runInNewContext(source, { window, CustomEvent: class {}, document: { documentElement: root, querySelector: () => ({ setAttribute: (key, value) => meta[key] = value }), querySelectorAll: () => [] }, localStorage: { getItem(key) { if (storageBlocked) throw Error(); return storage.get(key); }, setItem(key,value) { if (storageBlocked) throw Error(); storage.set(key,value); } } });
   return { api: window.afterclassAppearance, root, meta, storage, listeners, media };
 }
-test('first paint follows device and saved explicit choices win', () => {
-  assert.equal(setup({dark:true}).root.dataset.theme, 'dark');
-  assert.equal(setup({saved:'light',dark:true}).root.dataset.theme, 'light');
-  assert.equal(setup({saved:'invalid',dark:true}).api.get(), 'system');
+
+test('every theme supports every mode and changing one preserves the other', () => {
+ for (const theme of ['campus','classic','pastel']) for (const mode of ['light','dark','system']) {
+  const s=setup({dark:true}); s.api.setTheme(theme); s.api.set(mode);
+  assert.equal(s.root.dataset.palette,theme);
+  assert.equal(s.root.dataset.theme,mode==='system'?'dark':mode);
+  const saved=JSON.parse(s.storage.get('afterclass.appearance'));
+  assert.deepEqual(saved,{mode,theme});
+  const restored=setup({saved:JSON.stringify(saved),dark:true});
+  assert.equal(restored.api.getTheme(),theme); assert.equal(restored.api.get(),mode);
+  s.api.toggle();assert.equal(s.root.dataset.palette,theme);
+ }
 });
-test('system follows OS changes but manual choice does not', () => {
-  const s=setup();s.media.matches=true;s.listeners.media();assert.equal(s.root.dataset.theme,'dark');
+test('system tracks device changes for every theme while manual mode stays fixed', () => {
+ for(const theme of ['classic','campus','pastel']) {
+  const s=setup();s.api.setTheme(theme);s.media.matches=true;s.listeners.media();
+  assert.equal(s.root.dataset.theme,'dark');assert.equal(s.api.getTheme(),theme);
   s.api.set('light');s.listeners.media();assert.equal(s.root.dataset.theme,'light');
-  assert.equal(s.storage.get('afterclass.appearance'),'light');assert.equal(s.root.style.colorScheme,'light');
-  s.api.set('invalid');assert.equal(s.api.get(),'light');
+ }
 });
-test('preference synchronises between tabs and clearing storage restores system', () => {
-  const s=setup({dark:true});s.listeners.storage({key:'afterclass.appearance',newValue:'light'});assert.equal(s.root.dataset.theme,'light');
-  s.listeners.storage({key:'unrelated',newValue:'dark'});assert.equal(s.root.dataset.theme,'light');
-  s.listeners.storage({key:null,newValue:null});assert.equal(s.root.dataset.theme,'dark');assert.equal(s.meta.content,'#1c1b22');
+test('legacy Classic choices migrate without losing brightness or palette', () => {
+ for(const [saved,mode] of [['classic','dark'],['classic-light','light']]) {
+  const s=setup({saved});assert.equal(s.api.getTheme(),'classic');assert.equal(s.api.get(),mode);
+  s.api.set('system');assert.deepEqual(JSON.parse(s.storage.get('afterclass.appearance')),{theme:'classic',mode:'system'});
+ }
+ assert.equal(setup({saved:'dark'}).api.get(),'dark');
 });
-test('blocked browser storage still allows switching for the current visit', () => {
-  const s=setup({storageBlocked:true});s.api.set('dark');assert.equal(s.root.dataset.theme,'dark');
+test('cross-tab changes update both choices atomically and removal resets defaults', () => {
+ const s=setup({dark:true});
+ s.listeners.storage({key:'afterclass.appearance',newValue:JSON.stringify({theme:'classic',mode:'light'})});
+ assert.equal(s.api.getTheme(),'classic');assert.equal(s.root.dataset.theme,'light');
+ s.listeners.storage({key:'unrelated',newValue:null});assert.equal(s.api.getTheme(),'classic');
+ s.listeners.storage({key:null,newValue:null});assert.equal(s.api.get(),'system');assert.equal(s.api.getTheme(),'pastel');
 });
-
-test('classic persists independently of OS appearance and uses dark native controls', () => {
-  const s = setup({ saved:'classic' });
-  assert.equal(s.api.get(), 'classic');
-  assert.equal(s.root.dataset.theme, 'dark');
-  assert.equal(s.root.dataset.palette, 'classic');
-  assert.equal(s.root.style.colorScheme, 'dark');
-  assert.equal(s.meta.content, '#1c1917');
-  s.listeners.media(); assert.equal(s.root.dataset.palette, 'classic');
-  s.api.set('light'); assert.equal(s.root.dataset.palette, 'campus');
-  s.api.set('classic'); assert.equal(s.storage.get('afterclass.appearance'), 'classic');
-});
-
-test('classic light persists and the toolbar toggles brightness without losing Classic', () => {
- const s=setup({saved:'classic-light',dark:true});
- assert.equal(s.root.dataset.theme,'light');assert.equal(s.root.dataset.palette,'classic');
- assert.equal(s.root.style.colorScheme,'light');assert.equal(s.meta.content,'#fff7ef');
- s.api.toggle();assert.equal(s.api.get(),'classic');assert.equal(s.root.dataset.theme,'dark');
- s.api.toggle();assert.equal(s.api.get(),'classic-light');assert.equal(s.storage.get('afterclass.appearance'),'classic-light');
- s.listeners.storage({key:'afterclass.appearance',newValue:'classic-light'});assert.equal(s.root.dataset.theme,'light');
- s.api.set('light');s.api.toggle();assert.equal(s.api.get(),'dark');assert.equal(s.root.dataset.palette,'campus');
+test('invalid data and blocked storage do not prevent appearance changes', () => {
+ for(const saved of ['invalid','{}','null']) assert.equal(setup({saved}).api.get(),'system');
+ const s=setup({storageBlocked:true});s.api.setTheme('classic');s.api.set('dark');s.api.set('invalid');s.api.setTheme('invalid');
+ assert.equal(s.api.getTheme(),'classic');assert.equal(s.api.get(),'dark');assert.equal(s.meta.content,'#1c1917');
 });
